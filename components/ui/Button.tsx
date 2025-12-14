@@ -7,17 +7,17 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   size?: 'sm' | 'md' | 'lg';
 }
 
-export const Button: React.FC<ButtonProps> = ({ 
-  className, 
-  variant = 'primary', 
-  size = 'md', 
-  children, 
-  ...props 
+export const Button: React.FC<ButtonProps> = ({
+  className,
+  variant = 'primary',
+  size = 'md',
+  children,
+  ...props
 }) => {
-  const baseStyles = "font-mono uppercase tracking-wider transition-all duration-300 ease-out border focus:outline-none focus:ring-2 focus:ring-swiss-black focus:ring-offset-2";
-  
+  const baseStyles = "font-mono uppercase tracking-wider border focus:outline-none focus:ring-2 focus:ring-swiss-black focus:ring-offset-2 transition-all";
+
   const variants = {
-    primary: "bg-swiss-black text-swiss-bg border-swiss-black hover:bg-swiss-red hover:border-swiss-red hover:text-white",
+    primary: "bg-swiss-black text-swiss-bg border-swiss-black hover:bg-swiss-red hover:border-swiss-red",
     secondary: "bg-swiss-red text-white border-swiss-red hover:bg-swiss-black hover:border-swiss-black",
     outline: "bg-transparent text-swiss-black border-swiss-black hover:bg-swiss-black hover:text-swiss-bg"
   };
@@ -29,8 +29,8 @@ export const Button: React.FC<ButtonProps> = ({
   };
 
   return (
-    <button 
-      className={twMerge(baseStyles, variants[variant], sizes[size], className)} 
+    <button
+      className={twMerge(baseStyles, variants[variant], sizes[size], className)}
       {...props}
     >
       {children}

@@ -10,7 +10,7 @@ export const Hero: React.FC = () => {
         <div className="hidden md:flex gap-8 font-mono text-sm">
           <a href="#problem" className="hover:text-swiss-red transition-colors">The Problem</a>
           <a href="#solution" className="hover:text-swiss-red transition-colors">The Solution</a>
-          <a href="#call" className="hover:text-swiss-red transition-colors">Get Access</a>
+          <a href="/signup" className="hover:text-swiss-red transition-colors">Get Access</a>
         </div>
       </nav>
 

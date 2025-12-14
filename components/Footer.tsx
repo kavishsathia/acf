@@ -16,9 +16,11 @@ export const Footer: React.FC = () => {
             Integrate in minutes.
           </p>
           <div className="flex flex-wrap gap-4">
-            <Button size="lg" variant="secondary" className="flex items-center gap-2 group">
-              Get Started <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </Button>
+            <a href="/signup">
+              <Button size="lg" variant="secondary" className="flex items-center gap-2 group">
+                Get Started <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </a>
             <Button size="lg" variant="outline" className="text-swiss-bg border-swiss-bg hover:bg-swiss-bg hover:text-swiss-black">
               <Github className="w-4 h-4 mr-2 inline" /> GitHub
             </Button>
