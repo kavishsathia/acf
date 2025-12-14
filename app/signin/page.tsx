@@ -27,7 +27,7 @@ export default function SignIn() {
         throw new Error(data.error || 'Sign in failed');
       }
 
-      window.location.href = '/';
+      window.location.href = '/projects';
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Sign in failed');
     } finally {
