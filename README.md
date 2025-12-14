@@ -1,14 +1,16 @@
 <div align="center">
-  <img src="logo.png" alt="Unsloppify Logo" width="200"/>
+  <img src="logo.png" alt="ACF Logo" width="200"/>
 
-  # Unsloppify
+  # Agentic Contract Framework
 
   [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
   [![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/)
   [![Next.js](https://img.shields.io/badge/Next.js-16.0-black)](https://nextjs.org/)
   [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
 
-  A reference implementation of the Agentic Contract Framework for building observable, verifiable AI coding agents.
+  A methodology for building observable, verifiable AI coding agents that prevent silent failures.
+
+  **Unsloppify** is the reference implementation.
 </div>
 
 ## The Problem
