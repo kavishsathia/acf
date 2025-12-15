@@ -26,6 +26,7 @@ model Project {
   name           String
   description    String
   thumbnail      String?
+  previewUrl     String?
   userId         String
   user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   violationCount Int      @default(0)

@@ -61,6 +61,10 @@ export default {
 			return handleSetup(request, env, hostname);
 		}
 
+		if (url.pathname === '/status' && request.method === 'POST') {
+			return handleStatus(request, env);
+		}
+
 		if (url.pathname === '/test' && request.method === 'POST') {
 			return handleTest(request, env, hostname);
 		}
@@ -70,7 +74,7 @@ export default {
 		}
 
 		if (url.pathname === '/edit' && request.method === 'POST') {
-			return handleEdit(request, env, hostname);
+			return handleEdit(request, env);
 		}
 
 		return new Response('Not Found', { status: 404 });
@@ -168,6 +172,33 @@ async function handleTest(request: Request, env: Env, hostname: string): Promise
 	}
 }
 
+async function handleStatus(request: Request, env: Env): Promise<Response> {
+	try {
+		const body = (await request.json()) as { projectId: string };
+		if (!body.projectId) {
+			return new Response(JSON.stringify({ error: 'Bad Request' }), { status: 400 });
+		}
+
+		const { projectId } = body;
+		const sandbox = getSandbox(env.Sandbox, projectId);
+
+		// Check if app directory exists
+		const checkDir = await sandbox.exec('test -d /workspace/app && echo "exists"').catch(() => ({ stdout: '' }));
+		const active = checkDir.stdout.trim() === 'exists';
+
+		return new Response(
+			JSON.stringify({ projectId, active }),
+			{ status: 200, headers: { 'Content-Type': 'application/json' } }
+		);
+	} catch (error) {
+		console.error('Status check error:', error);
+		return new Response(
+			JSON.stringify({ active: false }),
+			{ status: 200, headers: { 'Content-Type': 'application/json' } }
+		);
+	}
+}
+
 async function handleSetup(request: Request, env: Env, hostname: string): Promise<Response> {
 	try {
 		const body = (await request.json()) as { projectId: string };
@@ -258,7 +289,7 @@ async function handlePoem(env: Env): Promise<Response> {
 	}
 }
 
-async function handleEdit(request: Request, env: Env, hostname: string): Promise<Response> {
+async function handleEdit(request: Request, env: Env): Promise<Response> {
 	try {
 		const body = (await request.json()) as { projectId: string; threadId: string; prompt: string };
 
@@ -284,7 +315,7 @@ async function handleEdit(request: Request, env: Env, hostname: string): Promise
 		]);
 
 		// Create workspace tools
-		const tools = createWorkspaceTools(env, projectId, hostname);
+		const tools = createWorkspaceTools(env, projectId);
 
 		// Build system prompt with documentation
 		const systemPrompt = `You are an expert web developer assistant working in a sandbox environment. Your job is to help users build and modify web applications using Alpine.js and Alpine AJAX.
@@ -292,14 +323,15 @@ async function handleEdit(request: Request, env: Env, hostname: string): Promise
 You have access to the following tools:
 - writeFile: Write content to a file
 - readFile: Read file contents
-- runBash: Execute bash commands (for npm, builds, etc.)
+- runBash: Execute bash commands (for installing packages, etc.)
 - replaceText: Make precise text replacements in files
-- show: Expose a port and get the preview URL
 
 The workspace is at /workspace. The main application files are in /workspace/app:
 - /workspace/app/public/index.html - The HTML template
 - /workspace/app/public/styles.css - The CSS styles
 - /workspace/app/src/server.ts - The Express server (TypeScript)
+
+IMPORTANT: The server is already running and will automatically reload when files change. Do NOT run npm run build or restart the server.
 
 ## Alpine.js Reference
 ${alpineJsDoc.content}
@@ -312,8 +344,6 @@ ${alpineAjaxDoc.content}
 - Use Alpine AJAX (x-target, method, action) for AJAX requests
 - Server responses must include matching IDs for x-target to work
 - Follow Swiss design principles: clean typography, minimal colors (#F4F4F0 bg, #0A0A0A text, #FF3300 accent)
-- After making changes, use runBash to rebuild if needed (npm run build in /workspace/app)
-- Use show tool to expose port 3001 when the user wants to see the result
 
 Be helpful, precise, and complete tasks fully.`;
 

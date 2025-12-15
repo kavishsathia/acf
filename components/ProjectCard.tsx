@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import { AlertTriangle, FileText } from 'lucide-react';
 import Image from 'next/image';
 
@@ -22,7 +23,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
   contractCount,
 }) => {
   return (
-    <div className="bg-white border-2 border-swiss-black p-6 group hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-all duration-200 cursor-pointer">
+    <Link href={`/projects/${id}`} className="block bg-white border-2 border-swiss-black p-6 group hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-all duration-200 cursor-pointer">
       {thumbnail && (
         <div className="w-full h-48 bg-swiss-bg border-2 border-swiss-black mb-4 relative overflow-hidden">
           <Image
@@ -62,6 +63,6 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
           </span>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };

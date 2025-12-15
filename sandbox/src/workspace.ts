@@ -6,9 +6,7 @@ interface Env {
 	Sandbox: DurableObjectNamespace<Sandbox>;
 }
 
-export function createWorkspaceTools(env: Env, projectId: string, hostname: string) {
-	const sandbox = getSandbox(env.Sandbox, projectId);
-
+export function createWorkspaceTools(env: Env, projectId: string) {
 	return {
 		writeFile: tool({
 			description: 'Write content to a file in the workspace. Creates the file if it does not exist, overwrites if it does.',
@@ -18,6 +16,7 @@ export function createWorkspaceTools(env: Env, projectId: string, hostname: stri
 			}),
 			execute: async ({ path, content }: { path: string; content: string }) => {
 				try {
+					const sandbox = getSandbox(env.Sandbox, projectId);
 					await sandbox.writeFile(path, content, { encoding: 'utf-8' });
 					return { success: true, path, message: `File written successfully: ${path}` };
 				} catch (error) {
@@ -37,6 +36,7 @@ export function createWorkspaceTools(env: Env, projectId: string, hostname: stri
 			}),
 			execute: async ({ path }: { path: string }) => {
 				try {
+					const sandbox = getSandbox(env.Sandbox, projectId);
 					const file = await sandbox.readFile(path, { encoding: 'utf-8' });
 					return { success: true, path, content: file.content };
 				} catch (error) {
@@ -50,13 +50,14 @@ export function createWorkspaceTools(env: Env, projectId: string, hostname: stri
 		}),
 
 		runBash: tool({
-			description: 'Execute a bash command in the workspace. Use for running builds, installing packages, or any shell operations.',
+			description: 'Execute a bash command in the workspace. Use for installing packages or any shell operations.',
 			inputSchema: z.object({
 				command: z.string().describe('The bash command to execute'),
 				cwd: z.string().optional().describe('Working directory for the command (default: /workspace)'),
 			}),
 			execute: async ({ command, cwd }: { command: string; cwd?: string }) => {
 				try {
+					const sandbox = getSandbox(env.Sandbox, projectId);
 					const result = await sandbox.exec(command, { cwd: cwd ?? '/workspace' });
 					return {
 						success: result.success,
@@ -84,6 +85,7 @@ export function createWorkspaceTools(env: Env, projectId: string, hostname: stri
 			}),
 			execute: async ({ path, oldText, newText }: { path: string; oldText: string; newText: string }) => {
 				try {
+					const sandbox = getSandbox(env.Sandbox, projectId);
 					const file = await sandbox.readFile(path, { encoding: 'utf-8' });
 					const content = file.content;
 
@@ -112,35 +114,6 @@ export function createWorkspaceTools(env: Env, projectId: string, hostname: stri
 					return {
 						success: false,
 						path,
-						error: error instanceof Error ? error.message : 'Unknown error',
-					};
-				}
-			},
-		}),
-
-		show: tool({
-			description:
-				'Expose a port from the sandbox and return the public preview URL. Use this to make a running server accessible.',
-			inputSchema: z.object({
-				port: z.number().describe('The port number to expose (e.g., 3001)'),
-				name: z.string().optional().describe('Optional name for the exposed port'),
-			}),
-			execute: async ({ port, name }: { port: number; name?: string }) => {
-				try {
-					const exposed = await sandbox.exposePort(port, {
-						hostname,
-						name: name ?? `port-${port}`,
-					});
-					return {
-						success: true,
-						port: exposed.port,
-						url: exposed.url,
-						message: `Port ${port} exposed at ${exposed.url}`,
-					};
-				} catch (error) {
-					return {
-						success: false,
-						port,
 						error: error instanceof Error ? error.message : 'Unknown error',
 					};
 				}

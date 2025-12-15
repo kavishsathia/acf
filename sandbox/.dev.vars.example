@@ -4,3 +4,6 @@ GOOGLE_GENERATIVE_AI_API_KEY=your_api_key_here
 
 # Worker API Secret (shared with main application for authentication)
 WORKER_API_SECRET=your_secret_key_here
+
+# Next.js Application URL (for API callbacks)
+NEXT_APP_URL=http://localhost:3000
