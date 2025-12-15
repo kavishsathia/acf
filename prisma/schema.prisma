@@ -32,6 +32,34 @@ model Project {
   contractCount  Int      @default(0)
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
+  threads        Thread[]
 
   @@index([userId])
+}
+
+model Thread {
+  id        String    @id @default(cuid())
+  name      String
+  projectId String
+  project   Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  messages  Message[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([projectId])
+}
+
+model Message {
+  id         String   @id @default(cuid())
+  threadId   String
+  thread     Thread   @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  role       String   // "user" | "assistant" | "tool_call" | "tool_result"
+  content    String?  // text content for user/assistant messages
+  toolName   String?  // for tool_call and tool_result
+  toolArgs   Json?    // arguments passed to tool (tool_call)
+  toolResult Json?    // result returned from tool (tool_result)
+  usage      Json?    // token usage (assistant messages)
+  createdAt  DateTime @default(now())
+
+  @@index([threadId])
 }

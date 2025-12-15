@@ -17,6 +17,7 @@
 	},
 	"dependencies": {
 		"@ai-sdk/google": "^2.0.46",
+		"@cloudflare/sandbox": "^0.6.0",
 		"ai": "^5.0.113"
 	}
 }
