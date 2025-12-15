@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const body = await request.json();
+    const body = (await request.json()) as { name: string; description: string; thumbnail?: string };
     const { name, description, thumbnail } = body;
 
     if (!name || !description) {

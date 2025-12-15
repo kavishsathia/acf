@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { Prisma } from '@prisma/client';
 
 interface MessagePayload {
   role: 'assistant' | 'tool_call' | 'tool_result';
@@ -48,9 +49,9 @@ export async function POST(
         role: msg.role,
         content: msg.content ?? null,
         toolName: msg.toolName ?? null,
-        toolArgs: msg.toolArgs ?? null,
-        toolResult: msg.toolResult ?? null,
-        usage: msg.usage ?? null,
+        toolArgs: msg.toolArgs ? (msg.toolArgs as Prisma.InputJsonValue) : Prisma.JsonNull,
+        toolResult: msg.toolResult ? (msg.toolResult as Prisma.InputJsonValue) : Prisma.JsonNull,
+        usage: msg.usage ? (msg.usage as Prisma.InputJsonValue) : Prisma.JsonNull,
       })),
     });
 

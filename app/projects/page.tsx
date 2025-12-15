@@ -37,13 +37,13 @@ export default function ProjectsPage() {
         return;
       }
 
-      const data = await response.json();
+      const data = (await response.json()) as { projects?: Project[]; error?: string };
 
       if (!response.ok) {
         throw new Error(data.error || 'Failed to fetch projects');
       }
 
-      setProjects(data.projects);
+      setProjects(data.projects || []);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch projects');
     } finally {

@@ -34,7 +34,7 @@ export default function SignUp() {
         body: JSON.stringify({ username, password, email: email || undefined }),
       });
 
-      const data = await response.json();
+      const data = (await response.json()) as { error?: string };
 
       if (!response.ok) {
         throw new Error(data.error || 'Sign up failed');

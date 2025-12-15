@@ -71,7 +71,13 @@ export async function PATCH(
     }
 
     const { id } = await params;
-    const body = await request.json();
+    const body = (await request.json()) as {
+      name?: string;
+      description?: string;
+      thumbnail?: string;
+      violationCount?: number;
+      contractCount?: number;
+    };
     const { name, description, thumbnail, violationCount, contractCount } = body;
 
     const existingProject = await prisma.project.findFirst({

@@ -21,7 +21,7 @@ export default function SignIn() {
         body: JSON.stringify({ username, password }),
       });
 
-      const data = await response.json();
+      const data = (await response.json()) as { error?: string };
 
       if (!response.ok) {
         throw new Error(data.error || 'Sign in failed');
